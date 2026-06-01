@@ -24,7 +24,7 @@ namespace GymSystemMVC
 
             app.UseAuthorization();
 
-            app.MapStaticAssets();
+            app.MapStaticAssets(); // To Read Files
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")
