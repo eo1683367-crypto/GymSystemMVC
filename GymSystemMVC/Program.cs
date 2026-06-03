@@ -1,3 +1,7 @@
+using GymSystemMVC.DAL.Contexts;
+using GymSystemMVC.DAL.Repositories.Classes;
+using GymSystemMVC.DAL.Repositories.Interfaces;
+
 namespace GymSystemMVC
 {
     public class Program
@@ -8,6 +12,10 @@ namespace GymSystemMVC
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            //DI
+            builder.Services.AddDbContext<GymDbContext>();
+            builder.Services.AddScoped<IPlanRepository, PlanRepository>();
 
             var app = builder.Build();
 

@@ -1,8 +1,12 @@
-﻿using GymSystemMVC.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Numerics;
+using System.Text;
+using GymSystemMVC.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace GymSystem.Configurations
+namespace GymSystemMVC.DAL.Configurations
 {
     public class PlanConfiguration : IEntityTypeConfiguration<Plan>
     {

@@ -1,7 +1,10 @@
-﻿using GymSystemMVC.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using GymSystemMVC.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace GymSystem.Contexts
+namespace GymSystemMVC.DAL.Contexts
 {
     public class GymDbContext : DbContext
     {
@@ -30,6 +33,5 @@ namespace GymSystem.Contexts
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(GymDbContext).Assembly);
 
         }
-
     }
 }
