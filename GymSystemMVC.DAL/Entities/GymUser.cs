@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymSystemMVC.DAL.Entities
 {
-    public class GymUser
+    public class GymUser : BaseEntity
     {
         [Required, MaxLength(50)]
         public string Name { get; set; } = null!;

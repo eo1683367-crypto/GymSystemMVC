@@ -8,18 +8,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymSystemMVC.DAL.Repositories.Classes
 {
-    public class PlanRepository : GenaricRepository<Plan>,IPlanRepository
+    public class MemberRepository : GenaricRepository<Member>,IMemberRepository
     {
+        private readonly GymDbContext gymDbContext;
 
-        private  GymDbContext gymDbContext;
-
-        public PlanRepository(GymDbContext _gymDbContext) : base(_gymDbContext)
+        public MemberRepository(GymDbContext _gymDbContext) : base(_gymDbContext) 
         {
             gymDbContext = _gymDbContext;
         }
 
         // Implement any additional methods specific to MemberRepository if needed
-
 
     }
 }

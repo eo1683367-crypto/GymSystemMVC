@@ -5,9 +5,8 @@ using GymSystemMVC.DAL.Entities;
 
 namespace GymSystemMVC.DAL.Repositories.Interfaces
 {
-    public interface IPlanRepository : IGenaricRepository<Plan>
+    public interface ITrainerRepository : IGenaricRepository<Trainer>
     {
-        // All New Spscific Feature
 
     }
 }
