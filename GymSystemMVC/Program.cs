@@ -1,5 +1,6 @@
 using GymSystemMVC.BLL.Services.Classes;
 using GymSystemMVC.BLL.Services.Interfaces;
+using GymSystemMVC.BLL.Utilities;
 using GymSystemMVC.DAL.Contexts;
 using GymSystemMVC.DAL.Repositories.Classes;
 using GymSystemMVC.DAL.Repositories.Interfaces;
@@ -21,18 +22,19 @@ namespace GymSystemMVC
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
-           // builder.Services.AddScoped<IPlanRepository, PlanRepository>();
 
-           // builder.Services.AddScoped(typeof(IGenaricRepository<>), typeof(GenaricRepository<>));
-           builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            builder.Services.AddScoped<IPlanRepository, PlanRepository>();
+           builder.Services.AddScoped(typeof(IGenaricRepository<>), typeof(GenaricRepository<>));
+           builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); 
+
+            // Map Configuration
+            builder.Services.AddAutoMapper(m => m.AddProfile(new ProjectProfile()));
+
+            builder.Services.AddScoped<ISessionService, SessionService>();
             builder.Services.AddScoped<IPlanService, PlanService>();
-            builder.Services.AddScoped<IMemberRepository, MemberRepository>();
             builder.Services.AddScoped<IMemberService, MemberService>();
-            builder.Services.AddScoped<ITrainerRepository, TrainerRepository>();
             builder.Services.AddScoped<ITrainerService, TrainerService>();
-
+            builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
 
             var app = builder.Build();

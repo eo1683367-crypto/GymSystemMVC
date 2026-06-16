@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using GymSystemMVC.BLL.Common;
 using GymSystemMVC.BLL.ViewModels.MembersViewModels;
 using GymSystemMVC.DAL.Entities;
 
@@ -19,8 +20,8 @@ namespace GymSystemMVC.BLL.Services.Interfaces
         // POST
         // ViewModel --> Model --> DB
 
-        Task<bool> CreateMemberAsync(CreateMemberViewModel model, CancellationToken ct = default);
-        Task<bool> UpdateMemberDetailsAsync(int memberId, MemberToUpdateViewModel model, CancellationToken ct = default);
-        Task<bool> DeleteMemberAsync(int memberId, CancellationToken ct = default);
+        Task<Result> CreateMemberAsync(CreateMemberViewModel model, CancellationToken ct = default);
+        Task<Result> UpdateMemberDetailsAsync(int memberId, MemberToUpdateViewModel model, CancellationToken ct = default);
+        Task<Result> DeleteMemberAsync(int memberId, CancellationToken ct = default);
     }
 }

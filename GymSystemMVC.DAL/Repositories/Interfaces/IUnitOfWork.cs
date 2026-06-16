@@ -11,5 +11,7 @@ namespace GymSystemMVC.DAL.Repositories.Interfaces
         // service => uniteOfWork.GetRepository<Trainer>().GetAll();
         public IGenaricRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity, new();
         public Task<int> CompleteAsync();
+
+        public ISessionRepository SessionRepository { get; }
     }
 }

@@ -15,8 +15,11 @@ namespace GymSystemMVC.DAL.Repositories.Classes
         public UnitOfWork(GymDbContext gymDbContext)
         {
             this.gymDbContext = gymDbContext;
+            SessionRepository = new SessionRepository(gymDbContext);
         }
-      
+
+        public ISessionRepository SessionRepository { get; }
+
 
         public IGenaricRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity, new()
         {

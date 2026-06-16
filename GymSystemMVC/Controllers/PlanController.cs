@@ -50,10 +50,7 @@ namespace GymSystem.Controllers
         {
             var result = await planService.TogglePlanStatusAsync(id, token);
 
-            if (result)
-                TempData["Success"] = "Plan Status Changed";
-            else
-                TempData["ErrorMessage"] = "Plan Not Found";
+            TempData[result.Success ? "Success" : "Failed"] = result.Success ? "Plan Status Changed" : result.Error;
 
             return RedirectToAction(nameof(Index));
         }
@@ -80,10 +77,10 @@ namespace GymSystem.Controllers
             }
             var result = await planService.UpdatePlanDetailsAsync(id, model, token);
 
-            if (result)
-                TempData["Success"] = "Plan Updated Successfully";
+            if (result.Success)
+                TempData["Success"] = "Plan Updated Successfully"; 
             else
-                TempData["Failed"] = "Update Failed!";
+                TempData["Failed"] = result.Error;
             return RedirectToAction(nameof(Index));
 
         }

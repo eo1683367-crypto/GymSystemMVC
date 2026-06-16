@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using AutoMapper;
+using GymSystemMVC.BLL.Common;
 using GymSystemMVC.BLL.Services.Interfaces;
 using GymSystemMVC.BLL.ViewModels.MembersViewModels;
 using GymSystemMVC.BLL.ViewModels.PlanViewModels;
+using GymSystemMVC.BLL.ViewModels.SessionViewModels;
 using GymSystemMVC.DAL.Entities;
 using GymSystemMVC.DAL.Repositories.Classes;
 using GymSystemMVC.DAL.Repositories.Interfaces;
@@ -13,10 +16,12 @@ namespace GymSystemMVC.BLL.Services.Classes
     public class PlanService : IPlanService
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper mapper;
 
-        public PlanService(IUnitOfWork unitOfWork)
+        public PlanService(IUnitOfWork unitOfWork,IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
         }
 
 
@@ -30,17 +35,10 @@ namespace GymSystemMVC.BLL.Services.Classes
 
             // Map members to MemberViewModel
 
-            var plansViewModels = plans.Select(m => new PlanViewModel()
-            {
-                Id = m.Id,
-                Name = m.Name,
-                Description = m.Description,
-                DurationDays = m.Duration,
-                Price = m.Price,
-                IsActive = m.IsActive
-            });
+            // Auto Mapped
+           return mapper.Map<IEnumerable<Plan>, IEnumerable<PlanViewModel>>(plans);
 
-            return plansViewModels;
+         
         }
 
         public async Task<PlanViewModel?> GetPlanDetailsAsync(int planId, CancellationToken ct = default)
@@ -51,19 +49,7 @@ namespace GymSystemMVC.BLL.Services.Classes
             // check if ID is Invalid !
             if (plan == null) return null!;
 
-            // Create PlanVM Basiclly
-            var planViewModel = new PlanViewModel()
-            {
-                Name = plan.Name,
-                Description = plan.Description,
-                DurationDays = plan.Duration,
-                Price = plan.Price,
-                IsActive = plan.IsActive
-
-            };
-
-
-            return planViewModel;
+            return mapper.Map<Plan, PlanViewModel>(plan);
         }
 
         public async Task<UpdatePlanViewModel> GetPlanToUpdateAsync(int planId, CancellationToken ct = default)
@@ -72,24 +58,17 @@ namespace GymSystemMVC.BLL.Services.Classes
 
             if (plan is null) return null!;
 
-            return new UpdatePlanViewModel
-            {
-                Id = plan.Id,
-                PlanName = plan.Name,
-                Description = plan.Description,
-                DurationDays = plan.Duration,
-                Price = plan.Price
-            };
+            return mapper.Map<Plan, UpdatePlanViewModel>(plan);
         }
         // POST
 
-        public async Task<bool> TogglePlanStatusAsync(int planId, CancellationToken ct = default)
+        public async Task<Result> TogglePlanStatusAsync(int planId, CancellationToken ct = default)
         {
             // Get specific plan by ID
             var plan = await unitOfWork.GetRepository<Plan>().GetById(planId, ct);
 
             // check if ID is Invalid !
-            if (plan is null) return false;
+            if (plan is null) return Result.NotFound("Plan Not Found");
 
             if (plan.IsActive)
             {
@@ -97,7 +76,7 @@ namespace GymSystemMVC.BLL.Services.Classes
                     mb => mb.PlanId == planId && mb.EndDate > DateTime.Now, false, ct);
 
                 if (activeMemberShip != null)
-                    return false;
+                    return Result.Fail("Cannot Deactivate Plan With Active Memberships");
             }
             // Toggle the IsActive status
             plan.IsActive = !plan.IsActive;
@@ -107,32 +86,38 @@ namespace GymSystemMVC.BLL.Services.Classes
 
             var result = await unitOfWork.CompleteAsync();
 
-            return result > 0;
+            return result > 0 ? Result.Ok() : Result.Fail("Failed To Toggle Plan Status");
         }
-       
-        public async Task<bool> UpdatePlanDetailsAsync(int planId, UpdatePlanViewModel model, CancellationToken ct = default)
+
+        public async Task<Result> UpdatePlanDetailsAsync(int planId, UpdatePlanViewModel model, CancellationToken ct = default)
         {
             var plan = await unitOfWork.GetRepository<Plan>().GetById(planId, ct);
 
-            if (plan is null) return false;
+            if (plan is null) 
+                return Result.NotFound("Plan Not Found");
 
-            // A plan with the same name already exists (excluding the current plan)
             if (plan.Name != model.PlanName)
-            return false;
+                return Result.Validation("Plan Name Cannot Be Changed");
 
-            var activeMemberShip = await unitOfWork.GetRepository<MemberShip>().FirstOrDefaultAsync(mb => mb.PlanId == planId && mb.EndDate > DateTime.Now, false, ct);
-            if (activeMemberShip != null || !plan.IsActive)
-                return false;
-            
-             plan.Duration = model.DurationDays;
-             plan.Price = model.Price;
-             plan.Description = model.Description;
+            if (!plan.IsActive)
+                return Result.Fail("Cannot Update An Inactive Plan");
+
+            var activeMemberShip = await unitOfWork.GetRepository<MemberShip>()
+                .FirstOrDefaultAsync(mb => mb.PlanId == planId && mb.EndDate > DateTime.Now, false, ct);
+
+            if (activeMemberShip is not null)
+                return Result.Fail("Cannot Update Plan With Active Memberships");
+
+
+            plan.Duration = model.DurationDays;
+            plan.Price = model.Price;
+            plan.Description = model.Description;
+
 
             unitOfWork.GetRepository<Plan>().Update(plan);
-
             var result = await unitOfWork.CompleteAsync();
 
-            return result > 0;
+            return result > 0 ? Result.Ok() : Result.Fail("Failed To Update Plan");
         }
 
     }

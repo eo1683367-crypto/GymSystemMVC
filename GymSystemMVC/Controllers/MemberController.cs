@@ -35,10 +35,10 @@ namespace GymSystemMVC.Controllers
 
             var result = await memberSevice.CreateMemberAsync(model, ct);
 
-            if (result)
+            if (result.Success)
                 TempData["Success"] = "Member Created Succefully";
             else
-                TempData["Failed"] = "Failed To Create Member";
+                TempData["Failed"] = result.Error;
 
             return RedirectToAction(nameof(Index));
         }
@@ -87,10 +87,10 @@ namespace GymSystemMVC.Controllers
 
             var result = await memberSevice.UpdateMemberDetailsAsync(id, model, ct);
 
-            if (result)
+            if (result.Success)
                 TempData["Success"] = "Member Updated Successfully";
             else
-                TempData["Failed"] = "Update Failed!";
+                TempData["Failed"] = result.Error;
 
             return RedirectToAction(nameof(Index));
 
@@ -106,10 +106,9 @@ namespace GymSystemMVC.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id, CancellationToken ct)
         {
             var result = await memberSevice.DeleteMemberAsync(id, ct);
-            if (result)
-                TempData["Success"] = "Member Deleted Successfully";
-            else
-                TempData["Failed"] = "Delete Failed!";
+
+            TempData[result.Success ? "Success" : "Failed"] = result.Success ? "Member Deleted Successfully" : result.Error;
+
             return RedirectToAction(nameof(Index));
         }
     }

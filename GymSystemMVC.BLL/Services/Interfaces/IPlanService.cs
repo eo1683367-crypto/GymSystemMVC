@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using GymSystemMVC.BLL.Common;
 using GymSystemMVC.BLL.ViewModels.MembersViewModels;
 using GymSystemMVC.BLL.ViewModels.PlanViewModels;
 
@@ -15,8 +16,8 @@ namespace GymSystemMVC.BLL.Services.Interfaces
         Task<UpdatePlanViewModel> GetPlanToUpdateAsync(int planId, CancellationToken ct = default);
 
         // POST
-        Task<bool> TogglePlanStatusAsync(int planId, CancellationToken ct = default);
-        Task<bool> UpdatePlanDetailsAsync(int planId, UpdatePlanViewModel model, CancellationToken ct = default);
+        Task<Result> TogglePlanStatusAsync(int planId, CancellationToken ct = default);
+        Task<Result> UpdatePlanDetailsAsync(int planId, UpdatePlanViewModel model, CancellationToken ct = default);
 
     }
 }

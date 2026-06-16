@@ -12,58 +12,55 @@ namespace GymSystemMVC.DAL.Repositories.Classes
     public class GenaricRepository<TEntity> : IGenaricRepository<TEntity> where TEntity : BaseEntity, new()
     {
         private readonly GymDbContext gymDbContext;
+        private readonly DbSet<TEntity> _set;
 
         public GenaricRepository(GymDbContext _gymDbContext)
         {
             gymDbContext = _gymDbContext;
+            _set = gymDbContext.Set<TEntity>();
         }
 
 
         #region Implementing All Basic Signature of CRUD Operations
         public async Task<IEnumerable<TEntity>> GetAll(bool isTracked, CancellationToken ct = default)
         {
-            var entity = isTracked ? gymDbContext.Set<TEntity>() : gymDbContext.Set<TEntity>().AsNoTracking();
+            IQueryable<TEntity> query = isTracked ? _set : _set.AsNoTracking();
 
-            return await entity.ToListAsync();
+            return await query.ToListAsync(ct);
         }
-        public async Task<TEntity?> GetById(int id, CancellationToken ct = default)
-        {
-            return await gymDbContext.Set<TEntity>().FirstOrDefaultAsync(p => p.Id == id);
-        }
+        public async Task<TEntity?> GetById(int id, CancellationToken ct = default) => await _set.FindAsync([id],ct);
+        
 
-        public void Add(TEntity entity)
-        {
-            gymDbContext.Set<TEntity>().Add(entity);
-        }
-        public void Update(TEntity entity)
-        {
-            gymDbContext.Set<TEntity>().Update(entity);
-        }
+        public void Add(TEntity entity) => _set.Add(entity);
+        
+        public void Update(TEntity entity) => _set.Update(entity);
+        
         public void Delete(int id)
         {
-            var entity = gymDbContext.Set<TEntity>().FirstOrDefault(x => x.Id == id);
+            var entity = _set.FirstOrDefault(x => x.Id == id);
             if (entity != null)
             {
-                gymDbContext.Set<TEntity>().Remove(entity);
+                _set.Remove(entity);
             }
         }
 
-        public Task<int> CompleteAsync()
-        {
-            return gymDbContext.SaveChangesAsync();
-        }
+        public Task<int> CompleteAsync() => gymDbContext.SaveChangesAsync();
+        
 
         public async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, bool isTracked = false, CancellationToken ct = default)
         {
-            var entity = isTracked ? gymDbContext.Set<TEntity>() : gymDbContext.Set<TEntity>().AsNoTracking();
+            var entity = isTracked ? _set : _set.AsNoTracking();
 
             return await entity.FirstOrDefaultAsync(predicate, ct);
         }
 
         public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken ct = default)
-        {
-           return await gymDbContext.Set<TEntity>().AnyAsync(predicate, ct);
-        }
+            => await _set.AnyAsync(predicate, ct);
+        
+
+        public Task<int> CountAsync(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken ct = default)
+              => predicate is null ? _set.AsNoTracking().CountAsync(ct) : _set.AsNoTracking().CountAsync(predicate, ct);
+        
         #endregion
     }
 }
