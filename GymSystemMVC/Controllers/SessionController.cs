@@ -73,17 +73,18 @@ namespace GymSystemMVC.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(int id,CancellationToken ct)
+        public async Task<IActionResult> Edit(int id, CancellationToken ct)
         {
-            var session = await sessionService.GetSessionToUpdateAsync(id, ct);
+            var result = await sessionService.GetSessionToUpdateAsync(id, ct);
 
-            if (session is null)
+            if (!result.Success)
             {
-                TempData["ErrorMessage"] = "Session Can Not Be Edit";
+                TempData["Failed"] = result.Error; // ← دلوقتي بيظهر السبب
                 return RedirectToAction(nameof(Index));
             }
+
             await PopulateDropDownAsync(ct);
-            return View(session);
+            return View(result.Value);
         }
 
 

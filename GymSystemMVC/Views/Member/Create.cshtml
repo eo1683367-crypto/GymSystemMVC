@@ -3,6 +3,27 @@
 @{
     ViewData["Title"] = "Create Member";
 }
+
+
+@* Alert Messages *@
+
+@if (TempData["Success"] is not null)
+{
+    <div id="Alert" class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+else if (TempData["Failed"] is not null)
+{
+    <div id="Alert" class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        @TempData["Failed"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
 <header class="mb-4">
     <h3 class="text-primary-color">Add Member</h3>
 </header>
@@ -140,4 +161,5 @@
 @section Scripts
 {
     <partial name="_ValidationScriptsPartial" />
+    <partial name="_AlertBoxScript" />
 }

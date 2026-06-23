@@ -104,25 +104,32 @@ namespace GymSystemMVC.BLL.Services.Classes
             return mappSession;
         }
 
-        public async Task<UpdateSessionViewModel> GetSessionToUpdateAsync(int sessionId, CancellationToken ct = default)
+        public async Task<Result<UpdateSessionViewModel>> GetSessionToUpdateAsync(int sessionId, CancellationToken ct = default)
         {
             var session = await unitOfWork.GetRepository<Session>().GetById(sessionId, ct);
 
-            if (session is null) return null;
+            if (session is null)
+                return Result<UpdateSessionViewModel>.NotFound("Session Not Found");
 
-            if (!await IsSessionValidForUpdateAsync(session, ct)) return null;
+            if (session.StartDate <= DateTime.Now)
+                return Result<UpdateSessionViewModel>.Fail("Session Is Already Started And Cannot Be Edited");
 
-            return mapper.Map<Session,UpdateSessionViewModel>(session);
-        }
-
-        private async Task<bool> IsSessionValidForUpdateAsync(Session session, CancellationToken ct)
-        {
-            if (session.StartDate <= DateTime.Now) return false;
 
             var booked = await unitOfWork.SessionRepository.GetCountOfBookedSlotAsync(session.Id, ct);
+            if (booked > 0)
+                return Result<UpdateSessionViewModel>.Fail("Session Has Booked Slots And Cannot Be Edited");
 
-            return booked == 0;
+            return Result<UpdateSessionViewModel>.Ok(mapper.Map<Session, UpdateSessionViewModel>(session));
         }
+
+        //private async Task<bool> IsSessionValidForUpdateAsync(Session session, CancellationToken ct)
+        //{
+        //    if (session.StartDate <= DateTime.Now) return false;
+
+        //    var booked = await unitOfWork.SessionRepository.GetCountOfBookedSlotAsync(session.Id, ct);
+
+        //    return booked == 0;
+        //}
 
         public async Task<Result> UpdateSessionAsync(int id, UpdateSessionViewModel model, CancellationToken ct = default)
         {

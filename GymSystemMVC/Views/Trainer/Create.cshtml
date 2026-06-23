@@ -4,7 +4,24 @@
     ViewData["Title"] = "Create Trainer";
 }
 
+@* Alert Messages *@
 
+@if (TempData["Success"] is not null)
+{
+    <div id="Alert" class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+else if (TempData["Failed"] is not null)
+{
+    <div id="Alert" class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        @TempData["Failed"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
 
 <div class="container mt-4">
     <header class="mb-4">
@@ -90,8 +107,10 @@
                 <span asp-validation-for="Specialties" class="text-danger"></span>
             </div>
         </div>
-
-        <footer class="d-flex justify-content-end mt-4">
+        <footer class="d-flex justify-content-end gap-3 mt-4">
+            <a asp-controller="Trainer" asp-action="Index" class="btn btn-outline-secondary px-4">
+                <i class="bi bi-arrow-left me-2"></i> Back to List
+            </a>
             <button type="submit" class="btn btn-fill">Add</button>
         </footer>
     </form>
@@ -102,4 +121,5 @@
 @section Scripts
 {
     <partial name="_ValidationScriptsPartial" />
+    <partial name="_AlertBoxScript" />
 }

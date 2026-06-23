@@ -81,7 +81,7 @@ namespace GymSystemMVC.BLL.Utilities
                 .ForMember(dest => dest.HealthRecord, opt => opt.MapFrom(src => src.HealthRecordViewModel));
 
             
-            CreateMap<HealthRecordViewModel, HealthRecord>();
+            CreateMap<HealthRecordViewModel, HealthRecord>().ReverseMap();
         }
         private void MapPlan()
         {

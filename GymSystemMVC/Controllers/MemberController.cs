@@ -36,11 +36,14 @@ namespace GymSystemMVC.Controllers
             var result = await memberSevice.CreateMemberAsync(model, ct);
 
             if (result.Success)
+            {
                 TempData["Success"] = "Member Created Succefully";
-            else
+                return RedirectToAction(nameof(Index));
+            }
+        
                 TempData["Failed"] = result.Error;
+                return View(nameof(Create), model);
 
-            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]

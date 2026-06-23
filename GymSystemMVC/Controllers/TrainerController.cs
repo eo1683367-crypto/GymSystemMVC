@@ -53,11 +53,14 @@ namespace GymSystemMVC.Controllers
             var result = await trainerService.CreateTrainerAsync(model, ct);
 
             if (result.Success)
+            {
                 TempData["Success"] = "Trainer Created Successfully";
-            else
+                return RedirectToAction(nameof(Index));
+            }
+            
                 TempData["Failed"] = result.Error;
+                return View(nameof(Create), model);
 
-            return RedirectToAction(nameof(Index));
 
         }
 

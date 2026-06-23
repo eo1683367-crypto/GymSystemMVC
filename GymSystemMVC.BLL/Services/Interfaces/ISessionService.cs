@@ -15,7 +15,7 @@ namespace GymSystemMVC.BLL.Services.Interfaces
 
         Task<SessionViewModel?> GetSessionDetailsAsync(int id, CancellationToken ct = default);
 
-        Task<UpdateSessionViewModel> GetSessionToUpdateAsync(int sessionId, CancellationToken ct = default);
+        Task<Result<UpdateSessionViewModel>> GetSessionToUpdateAsync(int sessionId, CancellationToken ct = default);
 
         Task<Result> UpdateSessionAsync(int id, UpdateSessionViewModel model, CancellationToken ct = default);
 
