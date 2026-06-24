@@ -13,5 +13,8 @@ namespace GymSystemMVC.DAL.Repositories.Interfaces
         public Task<int> CompleteAsync();
 
         public ISessionRepository SessionRepository { get; }
+        public IMemberShipRepository MemberShipRepository { get; }
+
+        public IBookingRepository BookingRepository { get; }
     }
 }

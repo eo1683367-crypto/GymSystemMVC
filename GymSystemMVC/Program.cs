@@ -25,16 +25,29 @@ namespace GymSystemMVC
 
 
            builder.Services.AddScoped(typeof(IGenaricRepository<>), typeof(GenaricRepository<>));
-           builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); 
+
+            #region Register Repositories And UOW
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<ISessionRepository, SessionRepository>();
+            builder.Services.AddScoped<IMemberShipRepository, MemberShipRepository>(); 
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+
+            #endregion
 
             // Map Configuration
             builder.Services.AddAutoMapper(m => m.AddProfile(new ProjectProfile()));
+            #region Register Services
 
             builder.Services.AddScoped<ISessionService, SessionService>();
             builder.Services.AddScoped<IPlanService, PlanService>();
             builder.Services.AddScoped<IMemberService, MemberService>();
             builder.Services.AddScoped<ITrainerService, TrainerService>();
-            builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
+            builder.Services.AddScoped<IMemberShipService, MemberShipService>();
+            builder.Services.AddScoped<IBookingService, BookingService>();
+            builder.Services.AddScoped<IAnalyticsService, AnalyticsService>(); 
+
+            #endregion
 
 
             var app = builder.Build();

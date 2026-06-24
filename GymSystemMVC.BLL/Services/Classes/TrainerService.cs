@@ -28,7 +28,7 @@ namespace GymSystemMVC.BLL.Services.Classes
         // GET
         public async Task<IEnumerable<TrainerViewModel>> GetAllTrainersAsync(CancellationToken ct = default)
         {
-            var trainers = await unitOfWork.GetRepository<Trainer>().GetAll(false,ct);
+            var trainers = await unitOfWork.GetRepository<Trainer>().GetAllAsync(null, false, ct);
 
             if (trainers is null) return [];
 
@@ -38,7 +38,7 @@ namespace GymSystemMVC.BLL.Services.Classes
 
         public async Task<TrainerViewModel?> GetTrainerDetailsAsync(int trainerId, CancellationToken ct = default)
         {
-           var trainer = await unitOfWork.GetRepository<Trainer>().GetById(trainerId, ct);
+           var trainer = await unitOfWork.GetRepository<Trainer>().GetByIdAsync(trainerId, ct);
            
             if (trainer is null) return null;
 
@@ -49,7 +49,7 @@ namespace GymSystemMVC.BLL.Services.Classes
         }
         public async Task<TrainerToUpdateViewModel> GetTrainerToUpdateAsync(int trainerId, CancellationToken ct = default)
         {
-            var trainer = await unitOfWork.GetRepository<Trainer>().GetById(trainerId, ct);
+            var trainer = await unitOfWork.GetRepository<Trainer>().GetByIdAsync(trainerId, ct);
 
             if(trainer is null) return null;
 
@@ -82,7 +82,7 @@ namespace GymSystemMVC.BLL.Services.Classes
 
         public async Task<Result> UpdateTrainerDetailsAsync(int trainerId, TrainerToUpdateViewModel model, CancellationToken ct = default)
         {
-            var trainer = await unitOfWork.GetRepository<Trainer>().GetById(trainerId, ct);
+            var trainer = await unitOfWork.GetRepository<Trainer>().GetByIdAsync(trainerId, ct);
 
             if (trainer is null)
                 return Result.NotFound("Trainer Not Found");
@@ -108,7 +108,7 @@ namespace GymSystemMVC.BLL.Services.Classes
 
         public async Task<Result> DeleteTrainerAsync(int trainerId, CancellationToken ct = default)
         {
-            var trainer = await unitOfWork.GetRepository<Trainer>().GetById(trainerId, ct);
+            var trainer = await unitOfWork.GetRepository<Trainer>().GetByIdAsync(trainerId, ct);
 
             if (trainer is null)
                 Result.NotFound("Trainer Not Found");

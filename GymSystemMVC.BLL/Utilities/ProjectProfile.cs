@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using AutoMapper;
+using GymSystemMVC.BLL.ViewModels.MemberShipsViewModels;
 using GymSystemMVC.BLL.ViewModels.MembersViewModels;
 using GymSystemMVC.BLL.ViewModels.PlanViewModels;
 using GymSystemMVC.BLL.ViewModels.SessionViewModels;
@@ -18,6 +19,7 @@ namespace GymSystemMVC.BLL.Utilities
             MapPlan();
             MapMember();
             MapTrainer();
+            MapMemberShip();
         }
 
         private void MapTrainer()
@@ -48,7 +50,6 @@ namespace GymSystemMVC.BLL.Utilities
                     BuildingNumber = src.BuildingNumber
                 }));
         }
-
         private void MapMember()
         {
             
@@ -109,6 +110,21 @@ namespace GymSystemMVC.BLL.Utilities
 
 
             CreateMap<Session,UpdateSessionViewModel>().ReverseMap();
+
+        }
+
+        private void MapMemberShip()
+        {
+            CreateMap<MemberShip, MemberShipViewModel>()
+                 .ForMember(dest => dest.MemberName, opt => opt.MapFrom(src => src.Member.Name))
+                 .ForMember(dest => dest.PlanName, opt => opt.MapFrom(src => src.Plan.Name))
+                 .ForMember(dest => dest.StartDate , opt => opt.MapFrom(src=>src.CreatedAt))
+                 .ReverseMap(); 
+
+            CreateMap<CreateMemberShipViewModel, MemberShip>().ReverseMap();
+            CreateMap<Member, MemberSelectListViewModel>().ReverseMap();
+            CreateMap<Plan, PlanSelectListViewModel>().ReverseMap();
+
 
         }
        

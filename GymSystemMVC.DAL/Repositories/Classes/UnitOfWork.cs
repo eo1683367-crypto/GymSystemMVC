@@ -12,13 +12,26 @@ namespace GymSystemMVC.DAL.Repositories.Classes
         private readonly GymDbContext gymDbContext;
         private readonly Dictionary<string, object> _Repos = [];
 
-        public UnitOfWork(GymDbContext gymDbContext)
+
+
+        #region Specific Repo With Specific Function
+        public ISessionRepository SessionRepository { get; }
+        public IMemberShipRepository MemberShipRepository { get; }
+
+        public IBookingRepository BookingRepository { get; }
+        #endregion
+        public UnitOfWork
+            (GymDbContext gymDbContext, 
+             ISessionRepository sessionRepository,
+             IMemberShipRepository memberShipRepository, 
+             IBookingRepository bookingRepository)
         {
             this.gymDbContext = gymDbContext;
-            SessionRepository = new SessionRepository(gymDbContext);
+            SessionRepository = sessionRepository;
+            MemberShipRepository = memberShipRepository;
+            BookingRepository = bookingRepository;
         }
 
-        public ISessionRepository SessionRepository { get; }
 
 
         public IGenaricRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity, new()

@@ -10,7 +10,6 @@ namespace GymSystemMVC.DAL.Configurations
         {
             builder.Ignore(X => X.Id);
             builder.Property(X => X.CreatedAt)
-                   .HasColumnName("BookingDate")
                    .HasDefaultValueSql("GETDATE()");
 
             builder.HasOne(X => X.Session)

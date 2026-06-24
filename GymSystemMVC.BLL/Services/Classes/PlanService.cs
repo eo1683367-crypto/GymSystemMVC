@@ -28,7 +28,7 @@ namespace GymSystemMVC.BLL.Services.Classes
         // GET
         public async Task<IEnumerable<PlanViewModel>> GetAllPlansAsync(CancellationToken ct = default)
         {
-            var plans = await unitOfWork.GetRepository<Plan>().GetAll(false, ct);
+            var plans = await unitOfWork.GetRepository<Plan>().GetAllAsync(null,false, ct);
 
             // check if Plans is null or empty
             if (!plans.Any()) return [];
@@ -44,7 +44,7 @@ namespace GymSystemMVC.BLL.Services.Classes
         public async Task<PlanViewModel?> GetPlanDetailsAsync(int planId, CancellationToken ct = default)
         {
             // Get specific plan by ID
-            var plan = await unitOfWork.GetRepository<Plan>().GetById(planId, ct);
+            var plan = await unitOfWork.GetRepository<Plan>().GetByIdAsync(planId, ct);
 
             // check if ID is Invalid !
             if (plan == null) return null!;
@@ -54,7 +54,7 @@ namespace GymSystemMVC.BLL.Services.Classes
 
         public async Task<UpdatePlanViewModel> GetPlanToUpdateAsync(int planId, CancellationToken ct = default)
         {
-            var plan = await unitOfWork.GetRepository<Plan>().GetById(planId, ct);
+            var plan = await unitOfWork.GetRepository<Plan>().GetByIdAsync(planId, ct);
 
             if (plan is null) return null!;
 
@@ -65,7 +65,7 @@ namespace GymSystemMVC.BLL.Services.Classes
         public async Task<Result> TogglePlanStatusAsync(int planId, CancellationToken ct = default)
         {
             // Get specific plan by ID
-            var plan = await unitOfWork.GetRepository<Plan>().GetById(planId, ct);
+            var plan = await unitOfWork.GetRepository<Plan>().GetByIdAsync(planId, ct);
 
             // check if ID is Invalid !
             if (plan is null) return Result.NotFound("Plan Not Found");
@@ -91,7 +91,7 @@ namespace GymSystemMVC.BLL.Services.Classes
 
         public async Task<Result> UpdatePlanDetailsAsync(int planId, UpdatePlanViewModel model, CancellationToken ct = default)
         {
-            var plan = await unitOfWork.GetRepository<Plan>().GetById(planId, ct);
+            var plan = await unitOfWork.GetRepository<Plan>().GetByIdAsync(planId, ct);
 
             if (plan is null) 
                 return Result.NotFound("Plan Not Found");

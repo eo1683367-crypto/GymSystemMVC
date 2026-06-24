@@ -18,7 +18,7 @@ namespace GymSystemMVC.BLL.Services.Classes
         }
         public async Task<AnalyticsViewModel> GetAnalyticsDataAsync(CancellationToken ct = default)
         {
-            var sessions = await unitOfWork.GetRepository<Session>().GetAll();
+            var sessions = await unitOfWork.GetRepository<Session>().GetAllAsync();
 
             var totalMember = await unitOfWork.GetRepository<Member>().CountAsync(ct:ct);
             var totalTrainers = await unitOfWork.GetRepository<Trainer>().CountAsync(ct: ct);
