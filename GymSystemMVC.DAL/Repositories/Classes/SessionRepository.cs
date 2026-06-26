@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
-using GymSystemMVC.DAL.Contexts;
-using GymSystemMVC.DAL.Entities;
+using GymSystemMVC.DAL.Data.Contexts;
+using GymSystemMVC.DAL.Models;
 using GymSystemMVC.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,9 +19,17 @@ namespace GymSystemMVC.DAL.Repositories.Classes
         }
 
         // Special Method
-        public async Task<IEnumerable<Session>> GetAllSessionsWithTrainerAndCategoryAsync(CancellationToken ct = default)
+        public async Task<IEnumerable<Session>> GetAllSessionsWithTrainerAndCategoryAsync(Expression<Func<Session, bool>>? filter, CancellationToken ct = default)
         {
-            var sessions = gymDbContext.Sessions.AsNoTracking().Include(s => s.Trainer).Include(s => s.Category);
+            var sessions =  gymDbContext.Sessions
+                                        .Include(s => s.Trainer)
+                                        .Include(s => s.Category)
+                                        .AsNoTracking();
+
+            if (filter is not null)
+            {
+                sessions = sessions.Where(filter);
+            }
 
             return await sessions.ToListAsync(ct);
         }

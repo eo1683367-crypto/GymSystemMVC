@@ -7,7 +7,7 @@ using GymSystemMVC.BLL.Common;
 using GymSystemMVC.BLL.Services.Interfaces;
 using GymSystemMVC.BLL.ViewModels.MembersViewModels;
 using GymSystemMVC.BLL.ViewModels.PlanViewModels;
-using GymSystemMVC.DAL.Entities;
+using GymSystemMVC.DAL.Models;
 using GymSystemMVC.DAL.Repositories.Interfaces;
 
 namespace GymSystemMVC.BLL.Services.Classes
@@ -16,17 +16,19 @@ namespace GymSystemMVC.BLL.Services.Classes
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
+        private readonly IAttachementServices attachementServices;
 
-        public MemberService(IUnitOfWork unitOfWork,IMapper mapper)
+        public MemberService(IUnitOfWork unitOfWork,IMapper mapper,IAttachementServices attachementServices)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
+            this.attachementServices = attachementServices;
         }
 
         // GET
         public async Task<IEnumerable<MemberViewModel>> GetAllMembersAsync(CancellationToken ct = default)
         {
-            var members = await unitOfWork.GetRepository<Member>().GetAll(false, ct);
+            var members = await unitOfWork.GetRepository<Member>().GetAllAsync(null, false, ct);
 
             // check if members is null or empty
             if (!members.Any()) return [];
@@ -42,7 +44,7 @@ namespace GymSystemMVC.BLL.Services.Classes
         public async Task<MemberViewModel?> GetMemberDetailsAsync(int memberId, CancellationToken ct = default)
         {
             // Get specific member by ID
-            var member = await unitOfWork.GetRepository<Member>().GetById(memberId, ct);
+            var member = await unitOfWork.GetRepository<Member>().GetByIdAsync(memberId, ct);
 
             // check if ID is Invalid !
             if (member == null) return null!;
@@ -56,7 +58,7 @@ namespace GymSystemMVC.BLL.Services.Classes
             // check if member has active membership
             if (activeMembership is not null)
             {
-                var planActive = await unitOfWork.GetRepository<Plan>().GetById(activeMembership.PlanId, ct);
+                var planActive = await unitOfWork.GetRepository<Plan>().GetByIdAsync(activeMembership.PlanId, ct);
 
                 // Map Plan Details to MemberVM
                 memberViewModel.PlanName = planActive?.Name;
@@ -78,7 +80,7 @@ namespace GymSystemMVC.BLL.Services.Classes
 
         public async Task<MemberToUpdateViewModel> GetMemberToUpdateAsync(int memberId, CancellationToken ct = default)
         {
-            var member = await unitOfWork.GetRepository<Member>().GetById(memberId, ct);
+            var member = await unitOfWork.GetRepository<Member>().GetByIdAsync(memberId, ct);
 
             if (member is null) return null;
 
@@ -102,6 +104,15 @@ namespace GymSystemMVC.BLL.Services.Classes
             // Auti Mapped
             var member = mapper.Map<CreateMemberViewModel, Member>(model);
 
+            // Attachment Service
+            var newPhotoName = await attachementServices
+                .UploudAsync(model.PhotoFile.OpenReadStream(),model.PhotoFile.FileName, "MemberPictures",ct);
+
+            if (string.IsNullOrEmpty(newPhotoName)) return Result.NotFound("Can't Find File Photo");
+
+            member.Photo = newPhotoName;
+
+            //-----------------------------------------------------------------------------------------
             // Add member to database
             unitOfWork.GetRepository<Member>().Add(member);
 
@@ -111,7 +122,7 @@ namespace GymSystemMVC.BLL.Services.Classes
         }
         public async Task<Result> UpdateMemberDetailsAsync(int memberId, MemberToUpdateViewModel model, CancellationToken ct = default)
         {
-            var member = await unitOfWork.GetRepository<Member>().GetById(memberId, ct);
+            var member = await unitOfWork.GetRepository<Member>().GetByIdAsync(memberId, ct);
             if (member is null) return Result.NotFound("Member Not Found");
 
             if (await unitOfWork.GetRepository<Member>().AnyAsync(m => m.Email == model.Email && m.Id != memberId, ct))
@@ -140,16 +151,28 @@ namespace GymSystemMVC.BLL.Services.Classes
         }
         public async Task<Result> DeleteMemberAsync(int memberId, CancellationToken ct = default)
         {
-            var member = await unitOfWork.GetRepository<Member>().GetById(memberId, ct);
+            var member = await unitOfWork.GetRepository<Member>().GetByIdAsync(memberId, ct);
             if (member is null) return Result.NotFound("Member Not Found");
 
+           
             var hasFutureSessions = await unitOfWork.GetRepository<Booking>()
                 .AnyAsync(b => b.MemberId == memberId && b.Session.EndDate > DateTime.Now, ct);
 
             if (hasFutureSessions)
                 return Result.Fail("Cannot Delete Member With Future Booked Sessions");
 
+
             unitOfWork.GetRepository<Member>().Delete(memberId);
+
+
+            // Attachment Service
+            if (member.Photo is not null)
+            {
+              attachementServices.Delete(member.Photo, "MemberPictures");
+            }
+
+            //-----------------------------------------------------------------------------------------
+
             var result = await unitOfWork.CompleteAsync();
             return result > 0 ? Result.Ok() : Result.Fail("Failed To Delete Member");
         }

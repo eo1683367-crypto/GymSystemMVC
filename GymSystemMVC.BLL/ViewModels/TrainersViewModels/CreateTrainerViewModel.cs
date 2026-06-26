@@ -1,4 +1,4 @@
-﻿using GymSystemMVC.DAL.Entities.Enums;
+﻿using GymSystemMVC.DAL.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace GymSystemMVC.BLL.ViewModels.TrainerViewModels

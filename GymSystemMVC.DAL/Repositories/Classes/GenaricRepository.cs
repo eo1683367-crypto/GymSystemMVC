@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
-using GymSystemMVC.DAL.Contexts;
-using GymSystemMVC.DAL.Entities;
+using GymSystemMVC.DAL.Data.Contexts;
+using GymSystemMVC.DAL.Models;
 using GymSystemMVC.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,13 +22,15 @@ namespace GymSystemMVC.DAL.Repositories.Classes
 
 
         #region Implementing All Basic Signature of CRUD Operations
-        public async Task<IEnumerable<TEntity>> GetAll(bool isTracked, CancellationToken ct = default)
+        public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null, bool isTracked = false, CancellationToken ct = default)
         {
             IQueryable<TEntity> query = isTracked ? _set : _set.AsNoTracking();
 
+            if(predicate is not null) query = query.Where(predicate);
+
             return await query.ToListAsync(ct);
         }
-        public async Task<TEntity?> GetById(int id, CancellationToken ct = default) => await _set.FindAsync([id],ct);
+        public async Task<TEntity?> GetByIdAsync(int id, CancellationToken ct = default) => await _set.FindAsync([id],ct);
         
 
         public void Add(TEntity entity) => _set.Add(entity);
@@ -43,6 +45,8 @@ namespace GymSystemMVC.DAL.Repositories.Classes
                 _set.Remove(entity);
             }
         }
+
+        public void Delete(TEntity entity) => _set.Remove(entity);
 
         public Task<int> CompleteAsync() => gymDbContext.SaveChangesAsync();
         

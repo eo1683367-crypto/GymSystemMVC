@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using GymSystemMVC.BLL.Services.Interfaces;
 using GymSystemMVC.BLL.ViewModels.AnalyticsViewModels;
-using GymSystemMVC.DAL.Entities;
+using GymSystemMVC.DAL.Models;
 using GymSystemMVC.DAL.Repositories.Interfaces;
 
 namespace GymSystemMVC.BLL.Services.Classes
@@ -18,7 +18,7 @@ namespace GymSystemMVC.BLL.Services.Classes
         }
         public async Task<AnalyticsViewModel> GetAnalyticsDataAsync(CancellationToken ct = default)
         {
-            var sessions = await unitOfWork.GetRepository<Session>().GetAll();
+            var sessions = await unitOfWork.GetRepository<Session>().GetAllAsync();
 
             var totalMember = await unitOfWork.GetRepository<Member>().CountAsync(ct:ct);
             var totalTrainers = await unitOfWork.GetRepository<Trainer>().CountAsync(ct: ct);

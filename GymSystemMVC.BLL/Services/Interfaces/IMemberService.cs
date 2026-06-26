@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using GymSystemMVC.BLL.Common;
 using GymSystemMVC.BLL.ViewModels.MembersViewModels;
-using GymSystemMVC.DAL.Entities;
+using GymSystemMVC.DAL.Models;
 
 namespace GymSystemMVC.BLL.Services.Interfaces
 {

@@ -2,12 +2,13 @@
 using GymSystemMVC.BLL.Services.Interfaces;
 using GymSystemMVC.BLL.ViewModels.MembersViewModels;
 using GymSystemMVC.BLL.ViewModels.PlanViewModels;
-using GymSystemMVC.DAL.Entities;
 using GymSystemMVC.DAL.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymSystem.Controllers
 {
+    [Authorize]
     public class PlanController : Controller
     {
 

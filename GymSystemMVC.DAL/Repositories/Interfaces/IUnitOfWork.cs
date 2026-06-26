@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using GymSystemMVC.DAL.Entities;
+using GymSystemMVC.DAL.Models;
 
 namespace GymSystemMVC.DAL.Repositories.Interfaces
 {
@@ -13,5 +13,8 @@ namespace GymSystemMVC.DAL.Repositories.Interfaces
         public Task<int> CompleteAsync();
 
         public ISessionRepository SessionRepository { get; }
+        public IMemberShipRepository MemberShipRepository { get; }
+
+        public IBookingRepository BookingRepository { get; }
     }
 }

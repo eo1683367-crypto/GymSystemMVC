@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
-using GymSystemMVC.DAL.Entities;
+using GymSystemMVC.DAL.Models;
 
 namespace GymSystemMVC.DAL.Repositories.Interfaces
 {
@@ -10,11 +10,13 @@ namespace GymSystemMVC.DAL.Repositories.Interfaces
     {
         // All Basic Signature of CRUD Operations
 
-        Task<IEnumerable<TEntity>> GetAll(bool isTracked = false, CancellationToken ct = default);
-        Task<TEntity?> GetById(int id, CancellationToken ct = default);
+        Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null, bool isTracked = false, CancellationToken ct = default);
+        Task<TEntity?> GetByIdAsync(int id, CancellationToken ct = default);
         void Add(TEntity entity);
         void Update(TEntity entity);
         void Delete(int id);
+
+        void Delete(TEntity entity);
         Task<int> CompleteAsync();
         //----------------------------------------------------------------------------------------------
 

@@ -5,7 +5,7 @@ using AutoMapper;
 using GymSystemMVC.BLL.Common;
 using GymSystemMVC.BLL.Services.Interfaces;
 using GymSystemMVC.BLL.ViewModels.SessionViewModels;
-using GymSystemMVC.DAL.Entities;
+using GymSystemMVC.DAL.Models;
 using GymSystemMVC.DAL.Repositories.Interfaces;
 
 namespace GymSystemMVC.BLL.Services.Classes
@@ -24,7 +24,7 @@ namespace GymSystemMVC.BLL.Services.Classes
   
         public async Task<IEnumerable<SessionViewModel>> GetAllSessionsAsync(CancellationToken ct = default)
         {
-            var sessions = await unitOfWork.SessionRepository.GetAllSessionsWithTrainerAndCategoryAsync(ct);
+            var sessions = await unitOfWork.SessionRepository.GetAllSessionsWithTrainerAndCategoryAsync();
 
             if (!sessions.Any()) return null;
 
@@ -50,13 +50,13 @@ namespace GymSystemMVC.BLL.Services.Classes
 
             //-------------------------------------------------------------
             var trainerRepo = unitOfWork.GetRepository<Trainer>();
-            var trainer = await trainerRepo.GetById(model.TrainerId, ct);      
+            var trainer = await trainerRepo.GetByIdAsync(model.TrainerId, ct);      
             if (trainer is null) return Result.NotFound("Trainer Not Found");
 
             //-------------------------------------------------------------
 
             var categoryRepo = unitOfWork.GetRepository<Category>();
-            var category = await categoryRepo.GetById(model.CategoryId, ct);
+            var category = await categoryRepo.GetByIdAsync(model.CategoryId, ct);
             if (category is null) return Result.NotFound("Category Not Found");
             //-------------------------------------------------------------
 
@@ -79,14 +79,14 @@ namespace GymSystemMVC.BLL.Services.Classes
 
         public async Task<IEnumerable<TrainerSelectViewModel>> GetTrainersForDropDownAsync(CancellationToken ct = default)
         {
-            var trainers = await unitOfWork.GetRepository<Trainer>().GetAll(false, ct);
+            var trainers = await unitOfWork.GetRepository<Trainer>().GetAllAsync(null, false, ct);
 
             return mapper.Map<IEnumerable<Trainer>, IEnumerable<TrainerSelectViewModel>>(trainers);
         }
 
         public async Task<IEnumerable<CategorySelectViewModel>> GetCategoriesForDropDownAsync(CancellationToken ct = default)
         {
-            var categories = await unitOfWork.GetRepository<Category>().GetAll(false, ct);
+            var categories = await unitOfWork.GetRepository<Category>().GetAllAsync(null, false, ct);
 
             return mapper.Map<IEnumerable<Category>, IEnumerable<CategorySelectViewModel>>(categories);
         }
@@ -106,7 +106,7 @@ namespace GymSystemMVC.BLL.Services.Classes
 
         public async Task<Result<UpdateSessionViewModel>> GetSessionToUpdateAsync(int sessionId, CancellationToken ct = default)
         {
-            var session = await unitOfWork.GetRepository<Session>().GetById(sessionId, ct);
+            var session = await unitOfWork.GetRepository<Session>().GetByIdAsync(sessionId, ct);
 
             if (session is null)
                 return Result<UpdateSessionViewModel>.NotFound("Session Not Found");
@@ -135,7 +135,7 @@ namespace GymSystemMVC.BLL.Services.Classes
         {
             var sessionRepo =  unitOfWork.GetRepository<Session>();
 
-            var session = await sessionRepo.GetById(id, ct);
+            var session = await sessionRepo.GetByIdAsync(id, ct);
 
             if (session is null)
                 return Result.NotFound("Session Not Found");
@@ -157,7 +157,7 @@ namespace GymSystemMVC.BLL.Services.Classes
 
             //-------------------------------------------------------------
             var trainerRepo = unitOfWork.GetRepository<Trainer>();
-            var trainer = await trainerRepo.GetById(model.TrainerId, ct);
+            var trainer = await trainerRepo.GetByIdAsync(model.TrainerId, ct);
             if (trainer is null) return Result.NotFound("Trainer Not Found");
             //-------------------------------------------------------------
 
@@ -176,7 +176,7 @@ namespace GymSystemMVC.BLL.Services.Classes
 
         public async Task<Result> DeleteSesssionAsync(int sessionId, CancellationToken ct = default)
         {
-            var session = await unitOfWork.GetRepository<Session>().GetById(sessionId,ct);
+            var session = await unitOfWork.GetRepository<Session>().GetByIdAsync(sessionId,ct);
 
             if (session is null) return
                     Result.NotFound("Session Not Found");
@@ -200,7 +200,7 @@ namespace GymSystemMVC.BLL.Services.Classes
 
         public async Task<SessionViewModel> GetSessionById(int sessionId, CancellationToken ct)
         {
-            var session = await unitOfWork.GetRepository<Session>().GetById(sessionId);
+            var session = await unitOfWork.GetRepository<Session>().GetByIdAsync(sessionId);
 
             return mapper.Map<Session,SessionViewModel>(session);
         }

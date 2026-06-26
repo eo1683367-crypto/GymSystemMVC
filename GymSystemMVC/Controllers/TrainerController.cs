@@ -2,10 +2,12 @@
 using GymSystemMVC.BLL.Services.Interfaces;
 using GymSystemMVC.BLL.ViewModels.PlanViewModels;
 using GymSystemMVC.BLL.ViewModels.TrainerViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymSystemMVC.Controllers
 {
+    [Authorize]
     public class TrainerController : Controller
     {
         private readonly ITrainerService trainerService;
@@ -38,11 +40,13 @@ namespace GymSystemMVC.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "SuperAdmin")]
         public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> CreateTrainer(CreateTrainerViewModel model,CancellationToken ct)
         {
             if (!ModelState.IsValid)

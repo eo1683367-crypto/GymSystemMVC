@@ -1,10 +1,12 @@
 using System.Diagnostics;
 using GymSystemMVC.BLL.Services.Interfaces;
 using GymSystemMVC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymSystemMVC.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> logger;
