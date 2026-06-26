@@ -2,12 +2,13 @@
 using GymSystemMVC.BLL.Services.Interfaces;
 using GymSystemMVC.BLL.ViewModels.BookingViewModels;
 using GymSystemMVC.BLL.ViewModels.MemberShipsViewModels;
-using GymSystemMVC.DAL.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GymSystemMVC.Controllers
 {
+    [Authorize]
     public class BookingController : Controller
     {
         private readonly IBookingService bookingService;

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using GymSystemMVC.DAL.Contexts;
-using GymSystemMVC.DAL.Entities;
+using GymSystemMVC.DAL.Data.Contexts;
+using GymSystemMVC.DAL.Models;
 using GymSystemMVC.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

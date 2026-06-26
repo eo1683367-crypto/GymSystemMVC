@@ -7,7 +7,7 @@ using GymSystemMVC.BLL.ViewModels.MembersViewModels;
 using GymSystemMVC.BLL.ViewModels.PlanViewModels;
 using GymSystemMVC.BLL.ViewModels.SessionViewModels;
 using GymSystemMVC.BLL.ViewModels.TrainerViewModels;
-using GymSystemMVC.DAL.Entities;
+using GymSystemMVC.DAL.Models;
 
 namespace GymSystemMVC.BLL.Utilities
 {

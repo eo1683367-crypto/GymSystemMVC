@@ -7,7 +7,7 @@ using GymSystemMVC.BLL.Services.Interfaces;
 using GymSystemMVC.BLL.ViewModels.MembersViewModels;
 using GymSystemMVC.BLL.ViewModels.PlanViewModels;
 using GymSystemMVC.BLL.ViewModels.SessionViewModels;
-using GymSystemMVC.DAL.Entities;
+using GymSystemMVC.DAL.Models;
 using GymSystemMVC.DAL.Repositories.Classes;
 using GymSystemMVC.DAL.Repositories.Interfaces;
 

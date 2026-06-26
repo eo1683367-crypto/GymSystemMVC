@@ -2,12 +2,13 @@
 using GymSystemMVC.BLL.Services.Interfaces;
 using GymSystemMVC.BLL.ViewModels.MemberShipsViewModels;
 using GymSystemMVC.BLL.ViewModels.SessionViewModels;
-using GymSystemMVC.DAL.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GymSystemMVC.Controllers
 {
+    [Authorize]
     public class MemberShipController : Controller
     {
         private readonly IMemberShipService memberShipService;

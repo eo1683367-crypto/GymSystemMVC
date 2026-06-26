@@ -5,7 +5,7 @@ using AutoMapper;
 using GymSystemMVC.BLL.Common;
 using GymSystemMVC.BLL.Services.Interfaces;
 using GymSystemMVC.BLL.ViewModels.SessionViewModels;
-using GymSystemMVC.DAL.Entities;
+using GymSystemMVC.DAL.Models;
 using GymSystemMVC.DAL.Repositories.Interfaces;
 
 namespace GymSystemMVC.BLL.Services.Classes

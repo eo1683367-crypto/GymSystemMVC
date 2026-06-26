@@ -5,8 +5,7 @@ using AutoMapper;
 using GymSystemMVC.BLL.Common;
 using GymSystemMVC.BLL.Services.Interfaces;
 using GymSystemMVC.BLL.ViewModels.TrainerViewModels;
-using GymSystemMVC.DAL.Entities;
-using GymSystemMVC.DAL.Entities.Enums;
+using GymSystemMVC.DAL.Models;
 using GymSystemMVC.DAL.Repositories.Classes;
 using GymSystemMVC.DAL.Repositories.Interfaces;
 

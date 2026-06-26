@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
-using GymSystemMVC.DAL.Entities.Enums;
+using GymSystemMVC.DAL.Models.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace GymSystemMVC.BLL.ViewModels.MembersViewModels
 {
     public class CreateMemberViewModel
     {
+        public IFormFile PhotoFile {  get; set; }
+
         [Required(ErrorMessage = "Name Is Required")]
         [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Name can only contain letters and spaces")]
         public string Name { get; set; } = default!;
